@@ -1,0 +1,17 @@
+﻿# Pliki i foldery do ignorowania w projekcie .NET
+bin/
+obj/
+*.user
+*.suo
+*.sln.docstates
+*.ide
+*.pdb
+*.dbmdl
+*.dbproj
+*.jfm
+*.jfm.1
+*.scc
+*.scc.*
+*.vs/
+.vscode/
+*.dbmdl

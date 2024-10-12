@@ -1,0 +1,6 @@
+@GradTech_HostAddress = http://localhost:5231
+
+GET {{GradTech_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
