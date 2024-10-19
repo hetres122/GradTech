@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace AuthService.Migrations
+namespace GradTech.Migrations
 {
     /// <inheritdoc />
     public partial class InitialCreate : Migration

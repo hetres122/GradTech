@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace AuthService.Data
+namespace GradTech.Data
 {
     public class ApplicationDbContext : IdentityDbContext<IdentityUser>
     {
