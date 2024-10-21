@@ -1,7 +1,7 @@
+using GradTech.DAL.DbAll;
 using GradTech.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +12,8 @@ builder.Services.AddIdentityApiEndpoints<IdentityUser>()
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("Authenticator")));
+
+builder.Services.AddDbContext<DalContext>(options => options.UseSqlServer("Server=localhost,1433;Database=GradTech;User Id=SA;Password=YourStrong!Passw0rd;TrustServerCertificate=True;"));
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
