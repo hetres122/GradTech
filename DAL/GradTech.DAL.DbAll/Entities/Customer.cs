@@ -2,7 +2,7 @@ namespace GradTech.DAL.DbAll.Entities;
 
 public class Customer
 {
-    public int CustomerId { get; set; }
+    public long CustomerId { get; set; }
     public string UserId { get; set; }
     public string FullName { get; set; }
     public string Email { get; set; }

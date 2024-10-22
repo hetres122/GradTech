@@ -24,11 +24,11 @@ namespace GradTech.DAL.DbAll.Migrations
 
             modelBuilder.Entity("GradTech.DAL.DbAll.Entities.AdditionalOption", b =>
                 {
-                    b.Property<int>("AdditionalOptionId")
+                    b.Property<long>("AdditionalOptionId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AdditionalOptionId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("AdditionalOptionId"));
 
                     b.Property<string>("OptionName")
                         .IsRequired()
@@ -96,11 +96,11 @@ namespace GradTech.DAL.DbAll.Migrations
 
             modelBuilder.Entity("GradTech.DAL.DbAll.Entities.Customer", b =>
                 {
-                    b.Property<int>("CustomerId")
+                    b.Property<long>("CustomerId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CustomerId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("CustomerId"));
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -127,14 +127,14 @@ namespace GradTech.DAL.DbAll.Migrations
 
             modelBuilder.Entity("GradTech.DAL.DbAll.Entities.Reservation", b =>
                 {
-                    b.Property<int>("ReservationId")
+                    b.Property<long>("ReservationId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ReservationId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("ReservationId"));
 
-                    b.Property<int>("CustomerId")
-                        .HasColumnType("int");
+                    b.Property<long>("CustomerId")
+                        .HasColumnType("bigint");
 
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
@@ -145,8 +145,8 @@ namespace GradTech.DAL.DbAll.Migrations
                     b.Property<decimal>("TotalAmount")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("UnitId")
-                        .HasColumnType("int");
+                    b.Property<long>("UnitId")
+                        .HasColumnType("bigint");
 
                     b.HasKey("ReservationId");
 
@@ -159,11 +159,11 @@ namespace GradTech.DAL.DbAll.Migrations
 
             modelBuilder.Entity("GradTech.DAL.DbAll.Entities.ReservationAdditionalOption", b =>
                 {
-                    b.Property<int>("ReservationId")
-                        .HasColumnType("int");
+                    b.Property<long>("ReservationId")
+                        .HasColumnType("bigint");
 
-                    b.Property<int>("AdditionalOptionId")
-                        .HasColumnType("int");
+                    b.Property<long>("AdditionalOptionId")
+                        .HasColumnType("bigint");
 
                     b.HasKey("ReservationId", "AdditionalOptionId");
 
@@ -174,11 +174,11 @@ namespace GradTech.DAL.DbAll.Migrations
 
             modelBuilder.Entity("GradTech.DAL.DbAll.Entities.Unit", b =>
                 {
-                    b.Property<int>("UnitId")
+                    b.Property<long>("UnitId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UnitId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("UnitId"));
 
                     b.Property<decimal>("DailyRate")
                         .HasColumnType("decimal(18,2)");
@@ -200,7 +200,7 @@ namespace GradTech.DAL.DbAll.Migrations
 
                     b.HasKey("UnitId");
 
-                    b.ToTable("Cars");
+                    b.ToTable("Unit");
                 });
 
             modelBuilder.Entity("GradTech.DAL.DbAll.Entities.Customer", b =>

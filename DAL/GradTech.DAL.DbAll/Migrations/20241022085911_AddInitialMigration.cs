@@ -15,7 +15,7 @@ namespace GradTech.DAL.DbAll.Migrations
                 name: "AdditionalOptions",
                 columns: table => new
                 {
-                    AdditionalOptionId = table.Column<int>(type: "int", nullable: false)
+                    AdditionalOptionId = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     OptionName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
@@ -51,10 +51,10 @@ namespace GradTech.DAL.DbAll.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Cars",
+                name: "Unit",
                 columns: table => new
                 {
-                    UnitId = table.Column<int>(type: "int", nullable: false)
+                    UnitId = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Make = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Model = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -64,14 +64,14 @@ namespace GradTech.DAL.DbAll.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Cars", x => x.UnitId);
+                    table.PrimaryKey("PK_Unit", x => x.UnitId);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Customers",
                 columns: table => new
                 {
-                    CustomerId = table.Column<int>(type: "int", nullable: false)
+                    CustomerId = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     FullName = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -93,10 +93,10 @@ namespace GradTech.DAL.DbAll.Migrations
                 name: "Reservations",
                 columns: table => new
                 {
-                    ReservationId = table.Column<int>(type: "int", nullable: false)
+                    ReservationId = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    UnitId = table.Column<int>(type: "int", nullable: false),
-                    CustomerId = table.Column<int>(type: "int", nullable: false),
+                    UnitId = table.Column<long>(type: "bigint", nullable: false),
+                    CustomerId = table.Column<long>(type: "bigint", nullable: false),
                     StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     TotalAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
@@ -105,16 +105,16 @@ namespace GradTech.DAL.DbAll.Migrations
                 {
                     table.PrimaryKey("PK_Reservations", x => x.ReservationId);
                     table.ForeignKey(
-                        name: "FK_Reservations_Cars_UnitId",
-                        column: x => x.UnitId,
-                        principalTable: "Cars",
-                        principalColumn: "UnitId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
                         name: "FK_Reservations_Customers_CustomerId",
                         column: x => x.CustomerId,
                         principalTable: "Customers",
                         principalColumn: "CustomerId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Reservations_Unit_UnitId",
+                        column: x => x.UnitId,
+                        principalTable: "Unit",
+                        principalColumn: "UnitId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -122,8 +122,8 @@ namespace GradTech.DAL.DbAll.Migrations
                 name: "ReservationAdditionalOptions",
                 columns: table => new
                 {
-                    ReservationId = table.Column<int>(type: "int", nullable: false),
-                    AdditionalOptionId = table.Column<int>(type: "int", nullable: false)
+                    ReservationId = table.Column<long>(type: "bigint", nullable: false),
+                    AdditionalOptionId = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -176,10 +176,10 @@ namespace GradTech.DAL.DbAll.Migrations
                 name: "Reservations");
 
             migrationBuilder.DropTable(
-                name: "Cars");
+                name: "Customers");
 
             migrationBuilder.DropTable(
-                name: "Customers");
+                name: "Unit");
 
             migrationBuilder.DropTable(
                 name: "ApplicationUser");

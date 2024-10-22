@@ -2,9 +2,9 @@ namespace GradTech.DAL.DbAll.Entities;
 
 public class Reservation
 {
-    public int ReservationId { get; set; }
-    public int UnitId { get; set; }
-    public int CustomerId { get; set; }
+    public long ReservationId { get; set; }
+    public long UnitId { get; set; }
+    public long CustomerId { get; set; }
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }
     public decimal TotalAmount { get; set; }

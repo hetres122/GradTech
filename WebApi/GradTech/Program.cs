@@ -1,5 +1,7 @@
 using GradTech.DAL.DbAll;
 using GradTech.Data;
+using GradTech.Service.Unit.Interfaces;
+using GradTech.Service.Unit.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,6 +20,7 @@ builder.Services.AddDbContext<DalContext>(options => options.UseSqlServer("Serve
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
+builder.Services.AddScoped<IUnitService, UnitService>();
 
 builder.Services.AddCors(options =>
 {
