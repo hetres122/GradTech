@@ -14,7 +14,13 @@ public class UnitController(IUnitService unitService) : Controller
     [HttpGet]
     public Task<List<GetUnitResponseDto>> GetAllUnit()
     {
-        return this._unitService.GetUnit();
+        return this._unitService.GetUnits();
+    }
+    
+    [HttpGet("{unitId}")]
+    public Task<GetUnitResponseDto> GetUnit(long unitId)
+    {
+        return this._unitService.GetUnit(unitId);
     }
 
     [HttpPost]

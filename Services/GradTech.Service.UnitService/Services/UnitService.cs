@@ -10,7 +10,7 @@ public class UnitService(DalContext dalContext) : IUnitService
 {
     private readonly DalContext _dalContext = dalContext;
 
-    public async Task<List<GetUnitResponseDto>> GetUnit()
+    public async Task<List<GetUnitResponseDto>> GetUnits()
     {
         var units = await _dalContext.Unit
             .Where(unit => unit.IsAvailable == true)
@@ -25,6 +25,23 @@ public class UnitService(DalContext dalContext) : IUnitService
             .ToListAsync();
 
         return units;
+    }
+    
+    public async Task<GetUnitResponseDto> GetUnit(long unitId)
+    {
+        var unit = await _dalContext.Unit
+            .Where(unit => unit.UnitId == unitId)
+            .Select(unit => new GetUnitResponseDto
+            {
+                UnitId = unit.UnitId,
+                Make = unit.Make,
+                Model = unit.Model,
+                Year = unit.Year,
+                DailyRate = unit.DailyRate
+            })
+            .FirstOrDefaultAsync();
+
+        return unit;
     }
 
     public async Task<GetUnitResponseDto> AddUnit(AddUnitRequestDto unit)
@@ -55,7 +72,7 @@ public class UnitService(DalContext dalContext) : IUnitService
     public async Task<GetUnitResponseDto> EditUnit(EditUnitRequestDto unit)
     {
         var unitToEdit = await _dalContext.Unit
-            .Where(unit => unit.UnitId == unit.UnitId)
+            .Where(unitToEdit => unitToEdit.UnitId == unit.UnitId)
             .FirstOrDefaultAsync();
 
         if (unitToEdit == null)
@@ -67,8 +84,7 @@ public class UnitService(DalContext dalContext) : IUnitService
         unitToEdit.Make = unit.Make;
         unitToEdit.Year = unit.Year;
         unitToEdit.DailyRate = unit.DailyRate;
-        unitToEdit.IsAvailable = unit.IsAvailable;
-
+        
         await _dalContext.SaveChangesAsync();
 
         return new GetUnitResponseDto

@@ -10,7 +10,5 @@ public class EditUnitRequestDto
     
     public string Year { get; set; }
     
-    public decimal DailyRate { get; set; }
-    
-    public bool IsAvailable { get; set; }
+    public decimal DailyRate { get; set; } 
 }

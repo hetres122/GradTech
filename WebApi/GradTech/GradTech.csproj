@@ -27,6 +27,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\DAL\GradTech.DAL.DbAll\GradTech.DAL.DbAll.csproj" />
+      <ProjectReference Include="..\..\Services\GradTech.Service.ReservationService\GradTech.Service.ReservationService.csproj" />
       <ProjectReference Include="..\..\Services\GradTech.Service.UnitService\GradTech.Service.UnitService.csproj" />
     </ItemGroup>
 
