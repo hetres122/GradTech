@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\Abstractions\GradTech.Abstraction.ReservationService\GradTech.Abstraction.ReservationService.csproj" />
+      <ProjectReference Include="..\..\DAL\GradTech.DAL.DbAll\GradTech.DAL.DbAll.csproj" />
+    </ItemGroup>
+
+</Project>
