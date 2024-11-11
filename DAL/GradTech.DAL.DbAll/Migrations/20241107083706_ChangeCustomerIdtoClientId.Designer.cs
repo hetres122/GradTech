@@ -4,6 +4,7 @@ using GradTech.DAL.DbAll;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GradTech.DAL.DbAll.Migrations
 {
     [DbContext(typeof(DalContext))]
-    partial class DalContextModelSnapshot : ModelSnapshot
+    [Migration("20241107083706_ChangeCustomerIdtoClientId")]
+    partial class ChangeCustomerIdtoClientId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -94,6 +97,37 @@ namespace GradTech.DAL.DbAll.Migrations
                     b.ToTable("ApplicationUser");
                 });
 
+            modelBuilder.Entity("GradTech.DAL.DbAll.Entities.Customer", b =>
+                {
+                    b.Property<long>("CustomerId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("CustomerId"));
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FullName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("CustomerId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Customers");
+                });
+
             modelBuilder.Entity("GradTech.DAL.DbAll.Entities.Reservation", b =>
                 {
                     b.Property<long>("ReservationId")
@@ -101,6 +135,10 @@ namespace GradTech.DAL.DbAll.Migrations
                         .HasColumnType("bigint");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("ReservationId"));
+
+                    b.Property<string>("ClientId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
@@ -114,11 +152,9 @@ namespace GradTech.DAL.DbAll.Migrations
                     b.Property<long>("UnitId")
                         .HasColumnType("bigint");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
                     b.HasKey("ReservationId");
+
+                    b.HasIndex("CustomerId");
 
                     b.HasIndex("UnitId");
 
@@ -173,8 +209,23 @@ namespace GradTech.DAL.DbAll.Migrations
                     b.ToTable("Unit");
                 });
 
+            modelBuilder.Entity("GradTech.DAL.DbAll.Entities.Customer", b =>
+                {
+                    b.HasOne("GradTech.DAL.DbAll.Entities.ApplicationUser", "User")
+                        .WithMany("Customers")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("GradTech.DAL.DbAll.Entities.Reservation", b =>
                 {
+                    b.HasOne("GradTech.DAL.DbAll.Entities.Customer", null)
+                        .WithMany("Reservations")
+                        .HasForeignKey("CustomerId");
+
                     b.HasOne("GradTech.DAL.DbAll.Entities.Unit", "Unit")
                         .WithMany("Reservations")
                         .HasForeignKey("UnitId")
@@ -183,9 +234,7 @@ namespace GradTech.DAL.DbAll.Migrations
 
                     b.HasOne("GradTech.DAL.DbAll.Entities.ApplicationUser", "User")
                         .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserId");
 
                     b.Navigation("Unit");
 
@@ -214,6 +263,16 @@ namespace GradTech.DAL.DbAll.Migrations
             modelBuilder.Entity("GradTech.DAL.DbAll.Entities.AdditionalOption", b =>
                 {
                     b.Navigation("ReservationAdditionalOptions");
+                });
+
+            modelBuilder.Entity("GradTech.DAL.DbAll.Entities.ApplicationUser", b =>
+                {
+                    b.Navigation("Customers");
+                });
+
+            modelBuilder.Entity("GradTech.DAL.DbAll.Entities.Customer", b =>
+                {
+                    b.Navigation("Reservations");
                 });
 
             modelBuilder.Entity("GradTech.DAL.DbAll.Entities.Reservation", b =>

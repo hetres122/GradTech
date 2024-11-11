@@ -4,6 +4,7 @@ using GradTech.DAL.DbAll;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GradTech.DAL.DbAll.Migrations
 {
     [DbContext(typeof(DalContext))]
-    partial class DalContextModelSnapshot : ModelSnapshot
+    [Migration("20241107165958_AddFunctionToTotalAmount")]
+    partial class AddFunctionToTotalAmount
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

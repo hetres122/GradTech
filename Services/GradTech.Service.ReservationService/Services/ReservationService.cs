@@ -9,28 +9,30 @@ public class ReservationService(DalContext dalContext) : IReservationService
 {
     private readonly DalContext _dalContext = dalContext;
     
-    public async Task<List<GetReservationResponseDto>> GetReservations()
+    public async Task<List<GetReservationResponseDto>> GetReservations(string userId)
     {
         var reservations = await _dalContext.Reservations
+            .Where(reservation => reservation.UserId == userId)
             .Select(reservation => new GetReservationResponseDto
             {
                 ReservationId = reservation.ReservationId,
                 UnitId = reservation.UnitId,
-                CustomerId = reservation.CustomerId,
+                UserId = reservation.UserId,
                 StartDate = reservation.StartDate,
-                EndDate = reservation.EndDate
+                EndDate = reservation.EndDate,
+                TotalAmount = reservation.TotalAmount
             })
             .ToListAsync();
         
         return reservations;
     }
     
-    public async Task<GetReservationResponseDto> AddReservation(AddReservationRequestDto reservation)
+    public async Task<GetReservationResponseDto> AddReservation(AddReservationRequestDto reservation, string userId)
     {
         var newReservation = new DAL.DbAll.Entities.Reservation
         {
             UnitId = reservation.UnitId,
-            CustomerId = reservation.CustomerId,
+            UserId = userId,
             StartDate = reservation.StartDate,
             EndDate = reservation.EndDate,
             TotalAmount = reservation.TotalAmount
@@ -44,20 +46,20 @@ public class ReservationService(DalContext dalContext) : IReservationService
         {
             ReservationId = newReservation.ReservationId,
             UnitId = newReservation.UnitId,
-            CustomerId = newReservation.CustomerId,
+            UserId = newReservation.UserId,
             StartDate = newReservation.StartDate,
             EndDate = newReservation.EndDate
         };
     }
     
-    public async Task<GetReservationResponseDto> EditReservation(EditReservationRequestDto reservation)
+    public async Task<GetReservationResponseDto> EditReservation(EditReservationRequestDto reservation, string userId)
     {
         var reservationToEdit = await _dalContext.Reservations
             .Where(reservation => reservation.ReservationId == reservation.ReservationId)
             .FirstOrDefaultAsync();
         
         reservationToEdit.UnitId = reservation.UnitId;
-        reservationToEdit.CustomerId = reservation.CustomerId;
+        reservationToEdit.UserId = userId;
         reservationToEdit.StartDate = reservation.StartDate;
         reservationToEdit.EndDate = reservation.EndDate;
         reservationToEdit.TotalAmount = reservation.TotalAmount;
@@ -68,7 +70,7 @@ public class ReservationService(DalContext dalContext) : IReservationService
         {
             ReservationId = reservationToEdit.ReservationId,
             UnitId = reservationToEdit.UnitId,
-            CustomerId = reservationToEdit.CustomerId,
+            UserId = reservationToEdit.UserId,
             StartDate = reservationToEdit.StartDate,
             EndDate = reservationToEdit.EndDate
         };
@@ -88,7 +90,7 @@ public class ReservationService(DalContext dalContext) : IReservationService
         {
             ReservationId = reservationToDelete.ReservationId,
             UnitId = reservationToDelete.UnitId,
-            CustomerId = reservationToDelete.CustomerId,
+            UserId = reservationToDelete.UserId,
             StartDate = reservationToDelete.StartDate,
             EndDate = reservationToDelete.EndDate
         };

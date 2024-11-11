@@ -1,12 +1,14 @@
 using GradTech.Abstraction.Unit.Models.Request;
 using GradTech.Abstraction.Unit.Models.Response;
 using GradTech.Service.Unit.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GradTech.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize(Roles = "Admin")]
 public class UnitController(IUnitService unitService) : Controller
 {
     private readonly IUnitService _unitService = unitService;
@@ -39,5 +41,13 @@ public class UnitController(IUnitService unitService) : Controller
     public Task<GetUnitResponseDto> DeleteUnit(long unitId)
     {
         return this._unitService.DeleteUnit(unitId);
+    }
+    
+    [HttpGet("available")]
+    public async Task<IActionResult> GetAvailableUnits(DateTime startDate, DateTime endDate)
+    {
+        var availableUnits = await _unitService.GetAvailableUnits(startDate, endDate);
+
+        return Ok(availableUnits);
     }
 }

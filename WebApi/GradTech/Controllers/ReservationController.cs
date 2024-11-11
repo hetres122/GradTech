@@ -1,19 +1,23 @@
 using GradTech.Abstraction.ReservationService.Models;
 using GradTech.Service.ReservationService.Interfaces;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GradTech.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class ReservationController(IReservationService reservationService) : Controller
+public class ReservationController(IReservationService reservationService, UserManager<IdentityUser> userManager) : Controller
 {
     private readonly IReservationService _reservationService = reservationService;
+    private readonly UserManager<IdentityUser> _userManager = userManager;
+
 
     [HttpGet]
     public async Task<IActionResult> GetReservations()
     {
-        var reservations = await _reservationService.GetReservations();
+        var userId = _userManager.GetUserId(User);
+        var reservations = await _reservationService.GetReservations(userId);
 
         return Ok(reservations);
     }
@@ -21,7 +25,8 @@ public class ReservationController(IReservationService reservationService) : Con
     [HttpPost]
     public async Task<IActionResult> AddReservation(AddReservationRequestDto reservation)
     {
-        var newReservation = await _reservationService.AddReservation(reservation);
+        var userId = _userManager.GetUserId(User);
+        var newReservation = await _reservationService.AddReservation(reservation, userId);
 
         return Ok(newReservation);
     }
@@ -29,7 +34,8 @@ public class ReservationController(IReservationService reservationService) : Con
     [HttpPut]
     public async Task<IActionResult> EditReservation(EditReservationRequestDto reservation)
     {
-        var editedReservation = await _reservationService.EditReservation(reservation);
+        var userId = _userManager.GetUserId(User);
+        var editedReservation = await _reservationService.EditReservation(reservation, userId);
 
         return Ok(editedReservation);
     }

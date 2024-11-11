@@ -14,4 +14,6 @@ public interface IUnitService
     public Task<GetUnitResponseDto> EditUnit(EditUnitRequestDto unit);
     
     public Task<GetUnitResponseDto> DeleteUnit(long unitId);
+    
+    public Task<List<GetUnitResponseDto>> GetAvailableUnits(DateTime startDate, DateTime endDate);
 }

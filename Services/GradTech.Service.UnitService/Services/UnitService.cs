@@ -121,4 +121,27 @@ public class UnitService(DalContext dalContext) : IUnitService
             UnitId = unitToDelete.UnitId
         };
     }
+    
+    public async Task<List<GetUnitResponseDto>> GetAvailableUnits(DateTime startDate, DateTime endDate)
+    {
+        if (startDate >= endDate)
+        {
+            return new List<GetUnitResponseDto>();
+        }
+
+        var sqlQuery = @"SELECT u.UnitId, u.Make, u.Model, u.Year, u.DailyRate, u.IsAvailable FROM Unit u WHERE u.IsAvailable = 1 AND u.UnitId NOT IN ( SELECT r.UnitId FROM Reservations r WHERE r.StartDate < {1} AND r.EndDate > {0})";
+
+        var availableUnits = await _dalContext.Unit
+            .FromSqlRaw(sqlQuery, startDate, endDate)
+            .ToListAsync();
+
+        return availableUnits.Select(unit => new GetUnitResponseDto
+        {
+            UnitId = unit.UnitId,
+            Make = unit.Make,
+            Model = unit.Model,
+            Year = unit.Year,
+            DailyRate = unit.DailyRate
+        }).ToList();
+    }
 }

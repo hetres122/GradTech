@@ -12,7 +12,6 @@ namespace GradTech.DAL.DbAll
         }
 
         public DbSet<Unit> Unit { get; set; }
-        public DbSet<Customer> Customers { get; set; }
         public DbSet<Reservation> Reservations { get; set; }
         public DbSet<AdditionalOption> AdditionalOptions { get; set; }
         public DbSet<ReservationAdditionalOption> ReservationAdditionalOptions { get; set; }
