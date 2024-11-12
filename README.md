@@ -5,6 +5,7 @@
 - [AuthController](#authcontroller)
 - [ReservationController](#reservationcontroller)
 - [UnitController](#unitcontroller)
+- [Database Triggers, Stored Procedures, and Functions](#database-triggers-stored-procedures-and-functions)
 
 ---
 
@@ -148,32 +149,110 @@ Controller for managing units, accessible only to users with the `Admin` role.
 
 ---
 
-## Models
+## Database Triggers, Stored Procedures, and Functions
 
-### AdditionalOption
+### Triggers
 
-- **AddAdditionalOptionDto**  
-  Model for adding a new additional option.
+#### SyncUsersOnInsertUpdate
 
-- **EditAdditionalOptionDto**  
-  Model for editing an existing additional option.
+Synchronizes user data between the `AuthServiceDb` database and the `GradTech` application database whenever a user record is inserted or updated in `AuthServiceDb`.
 
-### Reservation
-
-- **AddReservationRequestDto**  
-  Model for adding a new reservation.
-
-- **EditReservationRequestDto**  
-  Model for editing an existing reservation.
-
-### Unit
-
-- **AddUnitRequestDto**  
-  Model for adding a new unit.
-
-- **EditUnitRequestDto**  
-  Model for editing an existing unit.
+- **Trigger Creation**:
+    ```sql
+    CREATE TRIGGER SyncUsersOnInsertUpdate
+    ON AuthServiceDb.dbo.AspNetUsers
+    AFTER INSERT, UPDATE
+    AS
+    BEGIN
+        -- Call the stored procedure to synchronize data
+        EXEC SyncAspNetUsersToApplicationUsers;
+    END;
+    ```
 
 ---
 
-This documentation provides a comprehensive overview of all API endpoints, request parameters, response formats, and role-based access requirements.
+### Stored Procedures
+
+#### SyncAspNetUsersToApplicationUsers
+
+Synchronizes user data from `AuthServiceDb.dbo.AspNetUsers` with `GradTech.dbo.ApplicationUser`. Updates matching records, inserts new records, or deletes records in `ApplicationUser` when they no longer exist in `AspNetUsers`.
+
+- **Procedure Creation**:
+    ```sql
+    CREATE PROCEDURE SyncAspNetUsersToApplicationUsers
+    AS
+    BEGIN
+        MERGE INTO GradTech.dbo.ApplicationUser AS Target
+        USING AuthServiceDb.dbo.AspNetUsers AS Source
+        ON Target.Id = Source.Id
+        WHEN MATCHED THEN
+            UPDATE SET
+                Target.Id = Source.Id,
+                Target.UserName = Source.UserName,
+                Target.NormalizedUserName = Source.NormalizedUserName,
+                Target.Email = Source.Email,
+                Target.EmailConfirmed = Source.EmailConfirmed,
+                Target.PasswordHash = Source.PasswordHash,
+                Target.SecurityStamp = Source.SecurityStamp,
+                Target.ConcurrencyStamp = Source.ConcurrencyStamp,
+                Target.PhoneNumber = Source.PhoneNumber,
+                Target.PhoneNumberConfirmed = Source.PhoneNumberConfirmed,
+                Target.TwoFactorEnabled = Source.TwoFactorEnabled,
+                Target.LockoutEnd = Source.LockoutEnd,
+                Target.LockoutEnabled = Source.LockoutEnabled,
+                Target.AccessFailedCount = Source.AccessFailedCount
+        WHEN NOT MATCHED BY Target THEN
+            INSERT (Id, UserName, NormalizedUserName, Email, EmailConfirmed, PasswordHash, SecurityStamp, ConcurrencyStamp, PhoneNumber, PhoneNumberConfirmed, TwoFactorEnabled, LockoutEnd, LockoutEnabled, AccessFailedCount)
+            VALUES (Source.Id, Source.UserName, Source.NormalizedUserName, Source.Email, Source.EmailConfirmed, Source.PasswordHash, Source.SecurityStamp, Source.ConcurrencyStamp, Source.PhoneNumber, Source.PhoneNumberConfirmed, Source.TwoFactorEnabled, Source.LockoutEnd, Source.LockoutEnabled, Source.AccessFailedCount)
+        WHEN NOT MATCHED BY Source THEN
+            DELETE;
+    END;
+    ```
+
+---
+
+### Functions
+
+#### CalculateTotalAmount
+
+Calculates the total amount for a unit based on its daily rate and a specified date range.
+
+- **Function Creation**:
+    ```sql
+    CREATE FUNCTION dbo.CalculateTotalAmount
+    (
+        @UnitId INT,
+        @StartDate DATE,
+        @EndDate DATE
+    )
+    RETURNS DECIMAL
+    AS
+    BEGIN
+        DECLARE @TotalAmount DECIMAL;
+        DECLARE @Days INT = DATEDIFF(DAY, @StartDate, @EndDate);
+        DECLARE @DailyRate DECIMAL;
+        
+        SELECT @DailyRate = DailyRate FROM Unit WHERE UnitId = @UnitId;
+        SET @TotalAmount = @DailyRate * @Days;
+        
+        RETURN @TotalAmount;
+    END;
+    ```
+
+---
+
+### SQL Query
+
+Retrieves available units by filtering out units already reserved in a specified date range.
+
+- **Query**:
+    ```sql
+    SELECT u.UnitId, u.Make, u.Model, u.Year, u.DailyRate, u.IsAvailable 
+    FROM Unit u 
+    WHERE u.IsAvailable = 1 
+    AND u.UnitId NOT IN (
+        SELECT r.UnitId 
+        FROM Reservations r 
+        WHERE r.StartDate < {1} AND r.EndDate > {0}
+    );
+    ```
