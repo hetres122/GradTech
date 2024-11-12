@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace GradTech.DAL.DbAll.Migrations
+namespace GradTech.Migrations
 {
     /// <inheritdoc />
     public partial class AddProcedureAndTrigger : Migration
@@ -10,7 +10,7 @@ namespace GradTech.DAL.DbAll.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-             migrationBuilder.Sql(@"
+                      migrationBuilder.Sql(@"
                 CREATE PROCEDURE SyncAspNetUsersToApplicationUsers
                 AS
                 BEGIN
@@ -47,6 +47,7 @@ namespace GradTech.DAL.DbAll.Migrations
                 AFTER INSERT, UPDATE
                 AS
                 BEGIN
+                    -- Wywołaj procedurę składowaną, aby zsynchronizować dane
                     EXEC SyncAspNetUsersToApplicationUsers;
                 END;
             ");
