@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -26,5 +27,15 @@ public class Auth(SignInManager<IdentityUser> signInManager) : Controller
             return Ok(new { isAuthenticated = true });
         }
         return Unauthorized();
+    }
+    
+    [HttpGet("roles")]
+    public IActionResult GetUserRoles()
+    {
+        var roles = User.Claims
+            .Where(c => c.Type == ClaimTypes.Role)
+            .Select(c => c.Value)
+            .ToList();
+        return Ok(roles);
     }
 }

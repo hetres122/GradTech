@@ -7,7 +7,6 @@ namespace GradTech.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-[Authorize(Roles = "Admin")]
 public class AdditionalOption(IAdditionalOptionService additionalOption) : Controller
 {
     private readonly IAdditionalOptionService _additionalOption = additionalOption;
@@ -29,6 +28,7 @@ public class AdditionalOption(IAdditionalOptionService additionalOption) : Contr
     }
     
     [HttpPost]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> AddAdditionalOption(AddAdditionalOptionDto additionalOption)
     {
         var newAdditionalOption = await _additionalOption.AddAdditionalOption(additionalOption);
@@ -37,6 +37,7 @@ public class AdditionalOption(IAdditionalOptionService additionalOption) : Contr
     }
     
     [HttpPut]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> EditAdditionalOption(EditAdditionalOptionDto additionalOption)
     {
         var editedAdditionalOption = await _additionalOption.EditAdditionalOption(additionalOption);
@@ -45,6 +46,7 @@ public class AdditionalOption(IAdditionalOptionService additionalOption) : Contr
     }
     
     [HttpDelete("{additionalOptionId}")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> DeleteAdditionalOption(long additionalOptionId)
     {
         var deletedAdditionalOption = await _additionalOption.DeleteAdditionalOption(additionalOptionId);
