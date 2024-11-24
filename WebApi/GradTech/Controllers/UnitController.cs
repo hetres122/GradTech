@@ -8,7 +8,6 @@ namespace GradTech.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-[Authorize(Roles = "Admin")]
 public class UnitController(IUnitService unitService) : Controller
 {
     private readonly IUnitService _unitService = unitService;
@@ -26,18 +25,21 @@ public class UnitController(IUnitService unitService) : Controller
     }
 
     [HttpPost]
+    [Authorize(Roles = "Admin")]
     public Task<GetUnitResponseDto> AddUnit(AddUnitRequestDto unit)
     {
         return this._unitService.AddUnit(unit);
     }
     
     [HttpPut]
+    [Authorize(Roles = "Admin")]
     public Task<GetUnitResponseDto> EditUnit(EditUnitRequestDto unit)
     {
         return this._unitService.EditUnit(unit);
     }
     
     [HttpDelete]
+    [Authorize(Roles = "Admin")]
     public Task<GetUnitResponseDto> DeleteUnit(long unitId)
     {
         return this._unitService.DeleteUnit(unitId);
